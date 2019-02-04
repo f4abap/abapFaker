@@ -1,0 +1,50 @@
+class ZCL_FAKER_DEMO definition
+  public
+  final
+  create public .
+
+public section.
+  interfaces if_oo_adt_classrun.
+  protected section.
+  private section.
+ENDCLASS.
+
+
+
+CLASS ZCL_FAKER_DEMO IMPLEMENTATION.
+
+
+  METHOD IF_OO_ADT_CLASSRUN~MAIN.
+
+    DO 2 TIMES.
+
+
+      IF sy-index = 1.
+        DATA(faker) = NEW zcl_faker( 'en_US' ).
+*        DATA(faker) = NEW zcl_faker( 'en_xx' ).
+      ELSE.
+        faker = NEW zcl_faker( 'de_DE' ).
+      ENDIF.
+
+      DO 10 TIMES.
+        out->write(
+          |{ faker->person->name( ) }\n| &&
+          |{ faker->address->street_address( ) }\n| &&
+          |{ faker->address->city_address( ) }\n\n| &&
+          |Phone { faker->phone->number( ) }\n| &&
+          |{ faker->company->company_name( ) }\n| &&
+          |{ faker->job->job_title( ) }\n| &&
+          |{ '____________________________________________' }|     "sy-uline
+        ).
+      ENDDO.
+
+
+ ENDDO.
+
+*    DATA: int type zfh_date_table.
+*
+*          int-counter = 1.
+*    insert zfh_date_table from @int.
+
+  ENDMETHOD.
+ENDCLASS.
