@@ -1,0 +1,10 @@
+@EndUserText.label : 'Just for selecting current time'
+@AbapCatalog.enhancementCategory : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #LIMITED
+define table zfh_date_table {
+  key client  : abap.clnt not null;
+  key counter : abap.int1 not null;
+
+}
