@@ -1,0 +1,45 @@
+class ZCL_FAKER_CONSOLE definition
+  public
+  final
+  create public .
+
+public section.
+interfaces if_oo_adt_classrun.
+protected section.
+private section.
+CONSTANTS: mc_langu type sy-langu value 'D'.
+CONSTANTS: mc_country type land1 value 'DE'.
+ENDCLASS.
+
+
+
+CLASS ZCL_FAKER_CONSOLE IMPLEMENTATION.
+  METHOD IF_OO_ADT_CLASSRUN~MAIN.
+
+
+
+   out->write( |ABAP Faker| ).
+*   out->write( VALUE zfh_books( faker = NEW zcl_faker( |{ to_lower( mc_langu ) }_{ mc_country }| )
+*                                                    ( |{ faker->person->name( ) }| &&
+*                                                      |{ faker->address->street_address( ) }| &&
+*                                                      |{ faker->address->city_address( ) }| &&
+*                                                      |{ faker->phone->number( ) }| &&
+*                                                      |{ faker->company->company_name( ) }| &&
+*                                                      |{ faker->job->job_title( ) }| &&
+*                                                      | _______________________________________________________ | ) )
+*                         ).
+* TODO Replace Stringtab!!
+*    out->write( VALUE stringtab( LET faker = NEW zcl_faker( |{ to_lower( mc_langu ) }_{ mc_country }| )
+*                                                    IN FOR i = 1 UNTIL i > 10
+*                                                    ( |{ faker->person->name( ) }\n| &&
+*                                                      |{ faker->address->street_address( ) }\n| &&
+*                                                      |{ faker->address->city_address( ) }\n\n| &&
+*                                                      |{ faker->phone->number( ) }\n| &&
+*                                                      |{ faker->company->company_name( ) }\n| &&
+*                                                      |{ faker->job->job_title( ) }\n| &&
+*                                                      | ___ | ) )
+*                         ).
+
+  ENDMETHOD.
+
+ENDCLASS.
