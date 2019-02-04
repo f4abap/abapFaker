@@ -1,0 +1,18 @@
+@AbapCatalog.sqlViewName: 'ZFH_DATETIME_CDS'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #CHECK
+@EndUserText.label: 'Current Date and Time'
+define view zcds_datetime
+  as select from zfh_date_table
+{
+  tstmp_current_utctimestamp() as tstmp,
+  tstmp_to_dats( tstmp_current_utctimestamp(),
+                 abap_system_timezone( $session.client,'NULL' ),
+                 $session.client,
+                 'NULL' )      as dat,
+  tstmp_to_tims( tstmp_current_utctimestamp(),
+              abap_system_timezone( $session.client,'NULL' ),
+              $session.client,
+              'NULL' )         as tim
+}
