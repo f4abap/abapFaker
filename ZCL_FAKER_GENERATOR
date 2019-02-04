@@ -1,0 +1,90 @@
+CLASS zcl_faker_generator DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+    CONSTANTS __locale_default TYPE string VALUE 'DEFAULT'.
+
+    CLASS-METHODS create
+      IMPORTING i_type          TYPE string
+                i_locale        TYPE string
+                i_faker         TYPE REF TO zcl_faker
+      RETURNING VALUE(r_result) TYPE REF TO zcl_faker_provider.
+
+ENDCLASS.
+
+
+
+CLASS ZCL_FAKER_GENERATOR IMPLEMENTATION.
+
+
+  METHOD create.
+    DATA(class_name) = |ZCL_FAKER_{ i_type }_{ i_locale CASE = UPPER }|.
+
+    TRY.
+    case class_name.
+* Address
+      when 'ZCL_FAKER_ADDRESS_DEFAULT'.
+      create object r_result type ZCL_FAKER_ADDRESS_DEFAULT
+        EXPORTING I_FAKER = i_faker.
+      when 'ZCL_FAKER_ADDRESS_DE_DE'.
+      create object r_result type ZCL_FAKER_ADDRESS_DE_DE
+        EXPORTING I_FAKER = i_faker.
+      when 'ZCL_FAKER_ADDRESS_EN_US'.
+      create object r_result type ZCL_FAKER_ADDRESS_EN_US
+        EXPORTING I_FAKER = i_faker.
+* COMPANY
+      when 'ZCL_FAKER_COMPANY_DEFAULT'.
+      create object r_result type ZCL_FAKER_COMPANY_DEFAULT
+        EXPORTING I_FAKER = i_faker.
+      when 'ZCL_FAKER_COMPANY_DE_DE'.
+      create object r_result type ZCL_FAKER_COMPANY_DE_DE
+        EXPORTING I_FAKER = i_faker.
+      when 'ZCL_FAKER_COMPANY_EN_US'.
+      create object r_result type ZCL_FAKER_COMPANY_EN_US
+        EXPORTING I_FAKER = i_faker.
+* Job
+      when 'ZCL_FAKER_JOB_DEFAULT'.
+      create object r_result type ZCL_FAKER_JOB_DEFAULT
+        EXPORTING I_FAKER = i_faker.
+      when 'ZCL_FAKER_JOB_DE_DE'.
+      create object r_result type ZCL_FAKER_JOB_DE_DE
+        EXPORTING I_FAKER = i_faker.
+      when 'ZCL_FAKER_JOB_EN_US'.
+      create object r_result type ZCL_FAKER_JOB_EN_US
+        EXPORTING I_FAKER = i_faker.
+*Person
+      when 'ZCL_FAKER_PERSON_DEFAULT'.
+      create object r_result type ZCL_FAKER_PERSON_DEFAULT
+        EXPORTING I_FAKER = i_faker.
+      when 'ZCL_FAKER_PERSON_DE_DE'.
+      create object r_result type ZCL_FAKER_PERSON_DE_DE
+        EXPORTING I_FAKER = i_faker.
+      when 'ZCL_FAKER_PERSON_EN_US'.
+      create object r_result type ZCL_FAKER_PERSON_EN_US
+        EXPORTING I_FAKER = i_faker.
+* Phone
+      when 'ZCL_FAKER_PHONE_DEFAULT'.
+      create object r_result type ZCL_FAKER_PHONE_DEFAULT
+        EXPORTING I_FAKER = i_faker.
+      when 'ZCL_FAKER_PHONE_DE_DE'.
+      create object r_result type ZCL_FAKER_PHONE_DE_DE
+        EXPORTING I_FAKER = i_faker.
+      when 'ZCL_FAKER_PHONE_EN_US'.
+      create object r_result type ZCL_FAKER_PHONE_EN_US
+        EXPORTING I_FAKER = i_faker.
+    endcase.
+
+
+*TODO
+*        CREATE OBJECT r_result TYPE (class_name)
+*          EXPORTING i_faker = i_faker.
+*      CATCH cx_sy_create_object_error.
+*        class_name = |ZCL_FAKER_{ i_type }_{ __locale_default CASE = UPPER }|.
+*        CREATE OBJECT r_result TYPE (class_name)
+*          EXPORTING i_faker = i_faker.
+    ENDTRY.
+
+  ENDMETHOD.
+ENDCLASS.
