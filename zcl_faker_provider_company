@@ -1,0 +1,89 @@
+CLASS zcl_faker_provider_company DEFINITION
+  PUBLIC
+  INHERITING FROM zcl_faker_provider
+  ABSTRACT .
+
+  PUBLIC SECTION.
+    METHODS company_name
+      RETURNING VALUE(r_result) TYPE string.
+    METHODS company_claim
+      RETURNING VALUE(r_result) TYPE string.
+    METHODS company_suffix
+      RETURNING VALUE(r_result) TYPE string.
+    METHODS catch_phrase_words_part_1
+      RETURNING VALUE(r_result) TYPE string.
+    METHODS catch_phrase_words_part_2
+      RETURNING VALUE(r_result) TYPE string.
+    METHODS catch_phrase_words_part_3
+      RETURNING VALUE(r_result) TYPE string.
+    METHODS bs_words_part_1
+      RETURNING VALUE(r_result) TYPE string.
+    METHODS bs_words_part_2
+      RETURNING VALUE(r_result) TYPE string.
+    METHODS bs_words_part_3
+      RETURNING VALUE(r_result) TYPE string.
+
+  PROTECTED SECTION.
+    DATA _formats TYPE string_table.
+    data _claim_formats TYPE string_table.
+    DATA _company_suffixes TYPE string_table.
+    DATA _catch_phrase_words_part_1 TYPE string_table.
+    DATA _catch_phrase_words_part_2 TYPE string_table.
+    DATA _catch_phrase_words_part_3 TYPE string_table.
+    DATA _bs_words_part_1 TYPE string_table.
+    DATA _bs_words_part_2 TYPE string_table.
+    DATA _bs_words_part_3 TYPE string_table.
+
+
+  PRIVATE SECTION.
+ENDCLASS.
+
+
+
+CLASS ZCL_FAKER_PROVIDER_COMPANY IMPLEMENTATION.
+
+
+  METHOD bs_words_part_1.
+    r_result = _bs_words_part_1[ random( lines( _bs_words_part_1 ) ) ].
+  ENDMETHOD.
+
+
+  METHOD bs_words_part_2.
+    r_result = _bs_words_part_2[ random( lines( _bs_words_part_2 ) ) ].
+  ENDMETHOD.
+
+
+  METHOD bs_words_part_3.
+    r_result = _bs_words_part_3[ random( lines( _bs_words_part_3 ) ) ].
+  ENDMETHOD.
+
+
+  METHOD catch_phrase_words_part_1.
+    r_result = _catch_phrase_words_part_1[ random( lines( _catch_phrase_words_part_1 ) ) ].
+  ENDMETHOD.
+
+
+  METHOD catch_phrase_words_part_2.
+    r_result = _catch_phrase_words_part_2[ random( lines( _catch_phrase_words_part_2 ) ) ].
+  ENDMETHOD.
+
+
+  METHOD catch_phrase_words_part_3.
+    r_result = _catch_phrase_words_part_3[ random( lines( _catch_phrase_words_part_3 ) ) ].
+  ENDMETHOD.
+
+
+  METHOD company_claim.
+    r_result = formatter( _claim_formats[ random( lines( _claim_formats ) ) ] ).
+  ENDMETHOD.
+
+
+  METHOD company_name.
+    r_result = formatter( _formats[ random( lines( _formats ) ) ] ).
+  ENDMETHOD.
+
+
+  METHOD company_suffix.
+    r_result = _company_suffixes[ random( lines( _company_suffixes ) ) ].
+  ENDMETHOD.
+ENDCLASS.
