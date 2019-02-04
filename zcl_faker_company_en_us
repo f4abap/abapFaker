@@ -1,0 +1,24 @@
+CLASS zcl_faker_company_en_us DEFINITION
+  PUBLIC
+  INHERITING FROM zcl_faker_company_default
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+    METHODS constructor
+      IMPORTING i_faker TYPE REF TO zcl_faker.
+
+  PRIVATE SECTION.
+ENDCLASS.
+
+
+
+CLASS ZCL_FAKER_COMPANY_EN_US IMPLEMENTATION.
+
+
+  METHOD constructor.
+
+    super->constructor( i_faker ).
+
+  ENDMETHOD.
+ENDCLASS.
