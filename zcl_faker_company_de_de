@@ -1,0 +1,37 @@
+CLASS zcl_faker_company_de_de DEFINITION
+  PUBLIC
+  INHERITING FROM zcl_faker_company_default
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+    METHODS constructor
+      IMPORTING i_faker TYPE REF TO zcl_faker.
+
+  PRIVATE SECTION.
+ENDCLASS.
+
+
+
+CLASS ZCL_FAKER_COMPANY_DE_DE IMPLEMENTATION.
+
+
+  METHOD constructor.
+
+    super->constructor( i_faker ).
+
+    _formats = VALUE #(
+        ( `{{person-last_name}} {{company-company_suffix}}` )
+        ( `{{person-last_name}}-{{person-last_name}} {{company-company_suffix}}` )
+    ).
+
+    _company_suffixes = VALUE #(
+        ( |AG| ) ( |AG| ) ( |AG| ) ( |AG| ) ( |AG & Co. KG| ) ( |AG & Co. KGaA| ) ( |AG & Co. OHG| )
+        ( |GbR| ) ( |GbR| ) ( |GmbH| ) ( |GmbH| ) ( |GmbH| ) ( |GmbH| ) ( |GmbH & Co. KG| )
+        ( |GmbH & Co. KG| ) ( |GmbH & Co. KGaA| ) ( |GmbH & Co. OHG| ) ( |KG| ) ( |KG| ) ( |KG| )
+        ( |KGaA| ) ( |OHG mbH| ) ( |Stiftung & Co. KG| ) ( |Stiftung & Co. KGaA| ) ( |e.G.| )
+        ( |e.V.| )
+    ).
+
+  ENDMETHOD.
+ENDCLASS.
