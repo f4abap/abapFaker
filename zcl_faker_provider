@@ -1,0 +1,269 @@
+CLASS zcl_faker_provider DEFINITION
+  PUBLIC
+  ABSTRACT .
+
+  PUBLIC SECTION.
+    METHODS constructor
+      IMPORTING i_faker TYPE REF TO zcl_faker.
+
+  PROTECTED SECTION.
+    DATA _seed TYPE t.
+    DATA _faker TYPE REF TO zcl_faker.
+
+    METHODS formatter
+      IMPORTING i_format        TYPE string
+      RETURNING VALUE(r_result) TYPE string.
+
+    METHODS random
+      IMPORTING i_from          TYPE i DEFAULT 1
+                i_to            TYPE i
+      RETURNING VALUE(r_result) TYPE i.
+
+    "!  Replaces all placeholders in given text with randomized values,
+    "!  replacing: all hash sign ('#') occurrences with a random digit
+    "!  (from 0 to 9); all percentage sign ('%') occurrences with a
+    "!  random non-zero digit (from 1 to 9); all exclamation mark ('!')
+    "!  occurrences with a random digit (from 0 to 9) or an empty string;
+    "!  and all "at"-symbol occurrences with a random non-zero digit
+    "!  (from 1 to 9) or an empty string.
+    "!
+    "! @parameter i_text | text with placeholders
+    "! @parameter r_result | result
+    METHODS numerify
+      IMPORTING i_text          TYPE string DEFAULT '###'
+      RETURNING VALUE(r_result) TYPE string.
+
+    METHODS random_letter
+      IMPORTING i_upper         TYPE abap_boolean DEFAULT abap_true
+                i_lower         TYPE abap_boolean DEFAULT abap_false
+      RETURNING VALUE(r_result) TYPE string.
+
+  PRIVATE SECTION.
+
+
+ENDCLASS.
+
+
+
+CLASS zcl_faker_provider IMPLEMENTATION.
+
+
+  METHOD constructor.
+    _faker = i_faker.
+  ENDMETHOD.
+
+
+  METHOD formatter.
+
+    r_result = i_format.
+
+
+    DO.
+      FIND REGEX '\{\{(\w+)-(\w+)\}\}' IN r_result SUBMATCHES DATA(provider_name) DATA(method).
+      IF sy-subrc <> 0.
+        EXIT.
+      ENDIF.
+
+      DATA value TYPE string.
+      CLEAR value.
+
+      DATA provider TYPE REF TO zcl_faker_provider.
+      DATA person TYPE REF TO zcl_faker_provider_person.
+      DATA phone TYPE REF TO zcl_faker_provider_phone.
+      DATA address TYPE REF TO zcl_faker_provider_address.
+      DATA company TYPE REF TO zcl_faker_provider_company .
+
+      method = to_upper( method ).
+
+      CASE provider_name.
+        WHEN 'person'.
+* Not possible to do it dynamic atm
+          provider ?= _faker->person.
+          person ?= _faker->person.
+
+          CASE method.
+            WHEN 'FIRST_NAME'.
+              value = person->first_name( ).
+            WHEN 'FIRST_NAME_FEMALE'  .
+              value = person->first_name_female( ).
+            WHEN 'FIRST_NAME_MALE'   .
+              value = person->first_name_male( ).
+            WHEN 'INITIAL'  .
+              value = person->initial( ).
+            WHEN 'LAST_NAME'  .
+              value = person->last_name( ).
+            WHEN 'NAME'  .
+              value = person->name( ).
+          ENDCASE.
+
+
+        WHEN 'phone'.
+          provider ?= _faker->phone.
+          phone ?= _faker->phone.
+          CASE method.
+            WHEN 'NUMBER'.
+              value = phone->number( ).
+          ENDCASE.
+        WHEN 'address'.
+          provider ?= _faker->address.
+          address ?= _faker->address.
+          CASE method.
+            WHEN 'BUILDING_NUMBER'.
+              value = address->building_number( ).
+            WHEN 'CITY'.
+              value = address->city( ).
+            WHEN 'CITY_ADDRESS'.
+              value = address->city_address( ).
+            WHEN 'CITY_NAME'.
+              value = address->city_name( ).
+            WHEN 'CITY_PREFIX'.
+              value = address->city_prefix( ).
+            WHEN 'CITY_SUFFIX'.
+              value = address->city_suffix( ).
+            WHEN 'POSTCODE'.
+              value = address->postcode( ).
+            WHEN 'STATE_ABBR'.
+              value = address->state_abbr( ).
+            WHEN 'STREET_ADDRESS'.
+              value = address->street_address( ).
+            WHEN 'STREET_NAME'.
+              value = address->street_name( ).
+            WHEN 'STREET_SUFFIX_LONG'.
+              value = address->street_suffix_long( ).
+            WHEN 'STREET_SUFFIX_SHORT'.
+              value = address->street_suffix_short( ).
+          ENDCASE.
+        WHEN 'company'.
+          provider ?= _faker->company.
+          company ?= _faker->company.
+          CASE method.
+            WHEN 'BS_WORDS_PART_1'.
+              value = company->bs_words_part_1( ).
+            WHEN 'BS_WORDS_PART_2'.
+              value = company->bs_words_part_2( ).
+            WHEN 'BS_WORDS_PART_3'.
+              value = company->bs_words_part_3( ).
+            WHEN 'CATCH_PHRASE_WORDS_PART_1'.
+              value = company->catch_phrase_words_part_1( ).
+            WHEN 'CATCH_PHRASE_WORDS_PART_2'.
+              value = company->catch_phrase_words_part_2( ).
+            WHEN 'CATCH_PHRASE_WORDS_PART_3'.
+              value = company->catch_phrase_words_part_3( ).
+            WHEN 'COMPANY_CLAIM'.
+              value = company->company_claim( ).
+            WHEN 'COMPANY_NAME'.
+              value = company->company_name( ).
+            WHEN 'COMPANY_SUFFIX'.
+              value = company->company_suffix( ).
+          ENDCASE.
+      ENDCASE.
+
+      IF provider IS NOT BOUND.
+        value = |Provider for type { provider_name } not bound|.
+      ENDIF.
+
+      REPLACE REGEX '\{\{(\w+)-(\w+)\}\}' IN r_result WITH value.
+    ENDDO.
+
+  ENDMETHOD.
+
+
+  METHOD numerify.
+
+    r_result = i_text.
+
+    DO.
+      DATA(found) = abap_false.
+
+      DATA(digit) = |{ random( i_from = 0 i_to = 9 ) WIDTH = 1 }|.
+
+      REPLACE '#' WITH digit INTO r_result.
+      IF sy-subrc = 0.
+        found = abap_true.
+      ENDIF.
+
+      digit = |{ random( i_from = 1 i_to = 9 ) WIDTH = 1 }|.
+
+      REPLACE '%' WITH digit INTO r_result.
+      IF sy-subrc = 0.
+        found = abap_true.
+      ENDIF.
+
+      DATA(number) = random( i_from = 0 i_to = 10 ).
+      IF number = 10.
+        digit = ` `.
+      ELSE.
+        digit = |{ number WIDTH = 1 }|.
+      ENDIF.
+
+      REPLACE '!' WITH digit INTO r_result.
+      IF sy-subrc = 0.
+        found = abap_true.
+      ENDIF.
+
+      number = random( i_from = 1 i_to = 10 ).
+      IF number = 10.
+        digit = ` `.
+      ELSE.
+        digit = |{ number WIDTH = 1 }|.
+      ENDIF.
+
+      REPLACE '@' WITH digit INTO r_result.
+      IF sy-subrc = 0.
+        found = abap_true.
+      ENDIF.
+
+      IF found = abap_false.
+        EXIT.
+      ENDIF.
+
+    ENDDO.
+
+  ENDMETHOD.
+
+
+  METHOD random.
+*    sy-uzeit
+*    GET TIME.
+    IF _seed IS INITIAL.
+SELECT single tim from zcds_datetime into @_seed.
+     IF sy-subrc <> 0.
+     _seed = '010101'.
+     endif.
+    ELSE.
+      _seed = _seed + 1.
+    ENDIF.
+** TODO!!!!
+    TRY.
+        r_result = cl_abap_random_int=>create(
+                     seed           = CONV #( _seed )
+                     min            = i_from
+                     max            = i_to
+                   )->get_next( ).
+      CATCH cx_abap_random ##no_handler.
+    ENDTRY.
+
+  ENDMETHOD.
+
+
+  METHOD random_letter.
+    DATA(abcde) = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.
+
+*    DATA(offset2) = random( strlen( sy-abcde ) ) - 1.
+    DATA(offset) = random( strlen( abcde ) ) - 1.
+    r_result = abcde+offset(1).
+
+    IF  i_upper = abap_false
+    AND i_lower = abap_true.
+      "lower chars only
+      r_result = to_lower( r_result ).
+    ELSEIF i_upper = abap_true
+    AND i_lower = abap_true.
+      "random lower and upper chars
+      IF random( 2 ) = 2.
+        r_result = to_lower( r_result ).
+      ENDIF.
+    ENDIF.
+
+  ENDMETHOD.
+ENDCLASS.
