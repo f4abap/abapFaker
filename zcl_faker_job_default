@@ -1,0 +1,29 @@
+CLASS zcl_faker_job_default DEFINITION
+  PUBLIC
+  INHERITING FROM zcl_faker_provider_job
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+    METHODS constructor
+      IMPORTING i_faker TYPE REF TO zcl_faker.
+
+  PRIVATE SECTION.
+ENDCLASS.
+
+
+
+CLASS ZCL_FAKER_JOB_DEFAULT IMPLEMENTATION.
+
+
+  METHOD constructor.
+
+    super->constructor( i_faker ).
+
+    _job_titles = VALUE #(
+      ( |Developer| )
+      ( |Engineer| )
+      ( |Administrator| )
+    ).
+
+  ENDMETHOD.
+ENDCLASS.
